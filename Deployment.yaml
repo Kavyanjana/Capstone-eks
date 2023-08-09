@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: upg-loadme-deployment
+  labels:
+    app: upg-loadme
+spec:
+  replicas: 3  # Number of replicas (pods) to be created
+  selector:
+    matchLabels:
+      app: upg-loadme  # Select pods labeled with "app: upg-loadme"
+  template:
+    metadata:
+      labels:
+        app: upg-loadme  # Label for pods created from this template
+    spec:
+      containers:
+        - name: upg-loadme-app
+          image: 191351159627.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
+          ports:
+            - containerPort: 8081  # Port that your Node.js application listens on
+          resources:
+            requests:
+              cpu: 100m  # CPU resource request
+              memory: 128Mi  # Memory resource request
+            limits:
+              cpu: 200m  # CPU resource limit
+              memory: 256Mi  # Memory resource limit
+      tolerations:
+        - key: kavya
+          operator: Equal
+          value: anju
+          effect: NoSchedule
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: app
+                operator: In
+                values: 
+                - capstone
